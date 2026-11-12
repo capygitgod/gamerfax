@@ -155,19 +155,23 @@ button{position:relative;isolation:isolate}
 @media(max-width:800px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:12px}.card h3{font-size:14px}.card p{font-size:11px}}
 @media(max-width:520px){.cards{grid-template-columns:1fr}.art.product-art{height:165px}.detail .art.product-art{height:205px}}
 
-/* Product detail pages: isolate the image from the specification panel. */
+
+/* Refined product detail layout: compact contained image, readable copy. */
 .product-detail{max-width:850px;overflow:hidden}
-.product-detail-layout{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr);align-items:stretch;min-width:0}
-.product-detail-media{height:320px;min-width:0;min-height:0;padding:22px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f2f4f6;box-sizing:border-box}
-.product-detail-media img.product-image{display:block!important;position:static!important;float:none!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;transform:none!important}
-.product-detail-media .product-image-fallback{display:block;max-width:100%;overflow-wrap:anywhere}
-.product-detail-info{display:flex;flex-direction:column;justify-content:center;gap:14px;min-width:0;padding:24px;overflow-wrap:anywhere}
-.product-detail-info .product-spec-grid{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));margin:0}
-.product-detail-info .product-spec{min-width:0}
+.product-detail-layout{display:grid;grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);align-items:stretch;min-width:0}
+.product-detail-media{height:290px;min-width:0;min-height:0;padding:24px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f2f4f6;box-sizing:border-box}
+.product-detail-media img.product-image{display:block!important;position:static!important;float:none!important;width:auto!important;height:auto!important;max-width:78%!important;max-height:220px!important;object-fit:contain!important;object-position:center!important;margin:0 auto!important;transform:none!important;flex:0 1 auto!important}
+.product-detail-media .product-image-fallback{display:block;max-width:100%;overflow-wrap:anywhere;text-align:center}
+.product-detail-info{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:10px;min-width:0;padding:24px;overflow:hidden;overflow-wrap:anywhere}
+.product-detail-title{margin:0!important;color:var(--text);font-size:clamp(18px,2vw,25px);line-height:1.2;overflow-wrap:anywhere}
+.product-detail-description{margin:0!important;color:var(--muted);font-size:13px;line-height:1.65;max-width:100%;overflow-wrap:anywhere}
+.product-detail-specs{width:100%;min-width:0}
+.product-detail-info .product-spec-grid{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:4px 0}
+.product-detail-info .product-spec{min-width:0;padding:9px 10px}
 .product-detail-info .product-spec b{overflow-wrap:anywhere;word-break:break-word}
-.product-detail-info .product-manufacturer-link{align-self:flex-start;margin-top:2px}
+.product-detail-info .product-manufacturer-link{align-self:flex-start;margin-top:3px}
 .product-no-specs{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
-@media(max-width:650px){.product-detail-layout{grid-template-columns:minmax(0,1fr)}.product-detail-media{height:235px;padding:18px}.product-detail-info{padding:18px}.product-detail-info .product-spec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.product-detail-layout{grid-template-columns:minmax(0,1fr)}.product-detail-media{height:225px;padding:18px}.product-detail-media img.product-image{max-width:70%!important;max-height:185px!important}.product-detail-info{padding:19px}.product-detail-info .product-spec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:380px){.product-detail-info .product-spec-grid{grid-template-columns:minmax(0,1fr)}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"GamerFax","url":"https://gamerfax.netlify.app/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
@@ -249,8 +253,10 @@ function showDetail(kind,id){let x,body='';
  else if(kind==='platform'){const p={'steam':['Steam','A PC gaming storefront and community with a large game library, friends features and user reviews.','https://store.steampowered.com/'],'geforce-now':['GeForce NOW','Stream supported PC games from the cloud on compatible devices and supported networks.','https://www.nvidia.com/en-us/geforce-now/'],'xbox':['Xbox','Explore Xbox games, services, console features and the wider Xbox gaming ecosystem.','https://www.xbox.com/'],'playstation':['PlayStation','Explore PlayStation games, consoles, services and community features.','https://www.playstation.com/']}[id];if(!p)return;x={name:p[0],description:p[1]};body='<div class="detail"><div class="detail-copy"><h2>'+esc(p[0])+'</h2><p>'+esc(p[1])+'</p><a href="'+p[2]+'" target="_blank" rel="noopener">Official website ↗</a></div></div>'}else if(kind==='gear'||kind==='pcpart'){
  const key=kind==='gear'?'gear':'pcParts';
  x=catalog[key].find(z=>z.id===id);if(!x)return;
+ const cats=kind==='gear'?catalog.gearCategories:catalog.pcCategories;
+ const cat=cats.find(z=>z.id===x.category_id);
  const specMarkup=productSpecMarkup(x.specs)||'<p class="product-no-specs">Specifications have not been added yet.</p>';
- body='<div class="detail product-detail"><div class="product-detail-layout"><div class="product-detail-media">'+productImageMarkup(x)+'</div><div class="product-detail-info">'+specMarkup+(x.manufacturer_url?'<a class="product-manufacturer-link" href="'+esc(x.manufacturer_url)+'" target="_blank" rel="noopener noreferrer">View manufacturer page ↗</a>':'')+'</div></div></div>';
+ body='<div class="detail product-detail"><div class="product-detail-layout"><div class="product-detail-media">'+productImageMarkup(x)+'</div><div class="product-detail-info"><span class="tag">'+esc(cat?.name||(kind==='gear'?'Gaming gear':'PC part'))+'</span><h2 class="product-detail-title">'+esc(x.name)+'</h2><p class="product-detail-description">'+esc(x.description||'Product details will be added soon.')+'</p><div class="product-detail-specs">'+specMarkup+'</div>'+(x.manufacturer_url?'<a class="product-manufacturer-link" href="'+esc(x.manufacturer_url)+'" target="_blank" rel="noopener noreferrer">View manufacturer page ↗</a>':'')+'</div></div></div>';
 }
  shell(x.name,x.description,body)}
 async function renderSuggestion(){const {data:{user}}=await db.auth.getUser();if(!user){shell('Sign in to suggest','Only signed-in, email-verified members can submit suggestions.','<div class="admin-box" style="max-width:650px"><p>You need to sign in before suggesting a game, creator, product or correction.</p><button class="primary" id="suggest-signin">Sign in</button></div>');$('suggest-signin').onclick=()=>$('signin-modal').classList.add('open');return}shell('Suggest content','Suggestions are private to the GamerFax review queue until the owner approves them.','<div class="admin-box" style="max-width:650px"><p class="status-note">Signed in as '+esc(user.email)+'. Suggestions are limited to five per hour and duplicate pending suggestions are blocked.</p><label>What are you suggesting?</label><select id="suggest-type"><option value="game">New game</option><option value="genre">New game genre</option><option value="gear">Gaming gear / mouse / keyboard</option><option value="pc_part">PC part</option><option value="creator">YouTuber / creator</option><option value="abbreviation">Abbreviation</option><option value="correction">Correction</option></select><label>Name or title</label><input id="suggest-title" maxlength="120" placeholder="e.g. GG or NVIDIA GeForce RTX"><label>Details / source link</label><textarea id="suggest-details" maxlength="1500" placeholder="Describe what should be added or corrected, and include a reliable link if possible."></textarea><button class="primary" id="send-suggestion">Send suggestion</button><p class="status-note" id="suggest-status"></p></div>');$('send-suggestion').onclick=async()=>{const title=$('suggest-title').value.trim();if(!title){$('suggest-status').textContent='Enter a title first.';return}const {error}=await db.from('content_suggestions').insert({content_type:$('suggest-type').value,title,details:$('suggest-details').value.trim()});$('suggest-status').textContent=error?error.message:'Suggestion sent to the owner for review.'}}
