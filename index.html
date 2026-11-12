@@ -154,6 +154,21 @@ button{position:relative;isolation:isolate}
 .product-manufacturer-link{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:10px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:12px;font-weight:700;text-decoration:none;color:var(--cyan)}
 @media(max-width:800px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:12px}.card h3{font-size:14px}.card p{font-size:11px}}
 @media(max-width:520px){.cards{grid-template-columns:1fr}.art.product-art{height:165px}.detail .art.product-art{height:205px}}
+
+/* Product detail pages: isolate the image from the specification panel. */
+.product-detail{max-width:850px;overflow:hidden}
+.product-detail-layout{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr);align-items:stretch;min-width:0}
+.product-detail-media{height:320px;min-width:0;min-height:0;padding:22px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f2f4f6;box-sizing:border-box}
+.product-detail-media img.product-image{display:block!important;position:static!important;float:none!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;transform:none!important}
+.product-detail-media .product-image-fallback{display:block;max-width:100%;overflow-wrap:anywhere}
+.product-detail-info{display:flex;flex-direction:column;justify-content:center;gap:14px;min-width:0;padding:24px;overflow-wrap:anywhere}
+.product-detail-info .product-spec-grid{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));margin:0}
+.product-detail-info .product-spec{min-width:0}
+.product-detail-info .product-spec b{overflow-wrap:anywhere;word-break:break-word}
+.product-detail-info .product-manufacturer-link{align-self:flex-start;margin-top:2px}
+.product-no-specs{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+@media(max-width:650px){.product-detail-layout{grid-template-columns:minmax(0,1fr)}.product-detail-media{height:235px;padding:18px}.product-detail-info{padding:18px}.product-detail-info .product-spec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){.product-detail-info .product-spec-grid{grid-template-columns:minmax(0,1fr)}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"GamerFax","url":"https://gamerfax.netlify.app/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
 <aside class="sidebar" id="sidebar"><div class="brand">Gamer<span>Fax</span></div><div class="brand-by">by <a href="https://www.youtube.com/@CapyGodYT" target="_blank" rel="noopener">CapyGodYT ↗</a></div><div class="side-label">DISCOVER</div><nav class="nav"><button class="active" data-view="home">⌂ &nbsp; Overview</button><button data-view="games">▣ &nbsp; Games</button><button data-view="gear">⌁ &nbsp; Gaming gear</button><button data-view="pcparts">▦ &nbsp; PC parts</button><button data-view="abbreviations">Aa &nbsp; Abbreviations</button><button data-view="brands">◇ &nbsp; Brands</button><button data-view="platforms">◈ &nbsp; Platforms & tools</button><button data-view="suggest">✉ &nbsp; Suggest content</button><button data-view="saved">♡ &nbsp; Saved items</button><button data-view="notifications" id="notifications-nav" style="display:none">🔔 &nbsp; Notifications <span id="notification-count"></span></button><button data-view="admin" id="admin-nav" style="display:none">⚙ &nbsp; Admin dashboard</button></nav><div class="aside-note">✦ &nbsp; YOUR GAMING HUB<br><b>Discover more. Play your way.</b><br>Games, gear and tools in one place.</div></aside>
@@ -210,17 +225,33 @@ function productImageMarkup(x){
  return '<img class="product-image" src="'+esc(x.image_url)+'" alt="'+esc(x.name)+'" loading="lazy" decoding="async" onerror="this.onerror=null;this.remove();this.parentElement.classList.remove(\'product-art\');this.parentElement.textContent=\'PRODUCT IMAGE UNAVAILABLE\'">';
 }
 function productSpecMarkup(specs){
- const entries=Object.entries(specs||{}).filter(([key,value])=>value!==null&&value!==undefined&&String(value).trim()!=='');
- if(!entries.length)return '';
- return '<div class="product-spec-grid" aria-label="Product specifications">'+entries.map(([key,value])=>{
-  const label=String(key).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const formatted=Array.isArray(value)?value.join(', '):typeof value==='object'?JSON.stringify(value):String(value);
-  return '<div class="product-spec"><span>'+esc(label)+'</span><b>'+esc(formatted)+'</b></div>';
- }).join('')+'</div>';
+ let source=specs;
+ if(typeof source==='string'){
+  try{source=JSON.parse(source)}catch{source={Specifications:source}}
+ }
+ const entries=Array.isArray(source)
+  ?source.map((value,index)=>['Specification '+(index+1),value])
+  :Object.entries(source||{});
+ const clean=entries.filter(([key,value])=>value!==null&&value!==undefined&&String(value).trim()!=='');
+ if(!clean.length)return '';
+ const labelFor=key=>String(key).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+ const format=value=>{
+  if(Array.isArray(value))return value.map(v=>v&&typeof v==='object'?JSON.stringify(v):String(v)).join(', ');
+  if(value&&typeof value==='object')return Object.entries(value).map(([k,v])=>labelFor(k)+': '+(v&&typeof v==='object'?JSON.stringify(v):String(v))).join(' · ');
+  return String(value);
+ };
+ return '<div class="product-spec-grid" aria-label="Product specifications">'+clean.map(([key,value])=>
+  '<div class="product-spec"><span>'+esc(labelFor(key))+'</span><b>'+esc(format(value))+'</b></div>'
+ ).join('')+'</div>';
 }
 function showDetail(kind,id){let x,body='';
  if(kind==='game'){x=catalog.games.find(z=>z.id===id);if(!x)return;const genre=catalog.genres.find(z=>z.id===x.genre_id);const creators=catalog.creators.filter(z=>z.game_id===x.id);body='<div class="detail"><div class="art">'+(x.image_url?'<img src="'+esc(x.image_url)+'">':esc(x.name.toUpperCase()))+'</div><div class="detail-copy"><span class="tag">'+esc(genre?.name||'Game')+'</span><h2>'+esc(x.name)+'</h2><p>'+esc(x.description)+'</p><div class="detail-meta">'+(x.platforms||[]).map(p=>'<span class="chip">'+esc(p)+'</span>').join('')+'</div>'+(x.website_url?'<a href="'+esc(x.website_url)+'" target="_blank" rel="noopener">Official game website ↗</a>':'')+'<h3>Creators for '+esc(x.name)+'</h3><p class="muted">Creators and YouTubers associated with this game.</p><div class="creator-list">'+creators.map(c=>'<a class="creator-link" href="'+esc(c.channel_url)+'" target="_blank" rel="noopener">'+esc(c.name)+' ↗</a>').join('')+'</div></div></div>'}
- else if(kind==='platform'){const p={'steam':['Steam','A PC gaming storefront and community with a large game library, friends features and user reviews.','https://store.steampowered.com/'],'geforce-now':['GeForce NOW','Stream supported PC games from the cloud on compatible devices and supported networks.','https://www.nvidia.com/en-us/geforce-now/'],'xbox':['Xbox','Explore Xbox games, services, console features and the wider Xbox gaming ecosystem.','https://www.xbox.com/'],'playstation':['PlayStation','Explore PlayStation games, consoles, services and community features.','https://www.playstation.com/']}[id];if(!p)return;x={name:p[0],description:p[1]};body='<div class="detail"><div class="detail-copy"><h2>'+esc(p[0])+'</h2><p>'+esc(p[1])+'</p><a href="'+p[2]+'" target="_blank" rel="noopener">Official website ↗</a></div></div>'}else if(kind==='gear'||kind==='pcpart'){const key=kind==='gear'?'gear':'pcParts';x=catalog[key].find(z=>z.id===id);if(!x)return;const cats=kind==='gear'?catalog.gearCategories:catalog.pcCategories;const cat=cats.find(z=>z.id===x.category_id);body='<div class="detail"><div class="art product-art">'+productImageMarkup(x)+'</div><div class="detail-copy"><span class="tag">'+esc(cat?.name||kind)+'</span><h2>'+esc(x.name)+'</h2><p>'+esc(x.description)+'</p>'+productSpecMarkup(x.specs)+(x.manufacturer_url?'<a class="product-manufacturer-link" href="'+esc(x.manufacturer_url)+'" target="_blank" rel="noopener noreferrer">View manufacturer page ↗</a>':'')+'</div></div>'}
+ else if(kind==='platform'){const p={'steam':['Steam','A PC gaming storefront and community with a large game library, friends features and user reviews.','https://store.steampowered.com/'],'geforce-now':['GeForce NOW','Stream supported PC games from the cloud on compatible devices and supported networks.','https://www.nvidia.com/en-us/geforce-now/'],'xbox':['Xbox','Explore Xbox games, services, console features and the wider Xbox gaming ecosystem.','https://www.xbox.com/'],'playstation':['PlayStation','Explore PlayStation games, consoles, services and community features.','https://www.playstation.com/']}[id];if(!p)return;x={name:p[0],description:p[1]};body='<div class="detail"><div class="detail-copy"><h2>'+esc(p[0])+'</h2><p>'+esc(p[1])+'</p><a href="'+p[2]+'" target="_blank" rel="noopener">Official website ↗</a></div></div>'}else if(kind==='gear'||kind==='pcpart'){
+ const key=kind==='gear'?'gear':'pcParts';
+ x=catalog[key].find(z=>z.id===id);if(!x)return;
+ const specMarkup=productSpecMarkup(x.specs)||'<p class="product-no-specs">Specifications have not been added yet.</p>';
+ body='<div class="detail product-detail"><div class="product-detail-layout"><div class="product-detail-media">'+productImageMarkup(x)+'</div><div class="product-detail-info">'+specMarkup+(x.manufacturer_url?'<a class="product-manufacturer-link" href="'+esc(x.manufacturer_url)+'" target="_blank" rel="noopener noreferrer">View manufacturer page ↗</a>':'')+'</div></div></div>';
+}
  shell(x.name,x.description,body)}
 async function renderSuggestion(){const {data:{user}}=await db.auth.getUser();if(!user){shell('Sign in to suggest','Only signed-in, email-verified members can submit suggestions.','<div class="admin-box" style="max-width:650px"><p>You need to sign in before suggesting a game, creator, product or correction.</p><button class="primary" id="suggest-signin">Sign in</button></div>');$('suggest-signin').onclick=()=>$('signin-modal').classList.add('open');return}shell('Suggest content','Suggestions are private to the GamerFax review queue until the owner approves them.','<div class="admin-box" style="max-width:650px"><p class="status-note">Signed in as '+esc(user.email)+'. Suggestions are limited to five per hour and duplicate pending suggestions are blocked.</p><label>What are you suggesting?</label><select id="suggest-type"><option value="game">New game</option><option value="genre">New game genre</option><option value="gear">Gaming gear / mouse / keyboard</option><option value="pc_part">PC part</option><option value="creator">YouTuber / creator</option><option value="abbreviation">Abbreviation</option><option value="correction">Correction</option></select><label>Name or title</label><input id="suggest-title" maxlength="120" placeholder="e.g. GG or NVIDIA GeForce RTX"><label>Details / source link</label><textarea id="suggest-details" maxlength="1500" placeholder="Describe what should be added or corrected, and include a reliable link if possible."></textarea><button class="primary" id="send-suggestion">Send suggestion</button><p class="status-note" id="suggest-status"></p></div>');$('send-suggestion').onclick=async()=>{const title=$('suggest-title').value.trim();if(!title){$('suggest-status').textContent='Enter a title first.';return}const {error}=await db.from('content_suggestions').insert({content_type:$('suggest-type').value,title,details:$('suggest-details').value.trim()});$('suggest-status').textContent=error?error.message:'Suggestion sent to the owner for review.'}}
 let adminKey='games';
