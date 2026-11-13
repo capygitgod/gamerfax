@@ -395,20 +395,9 @@ function generatedCreatorAvatarDataUri(name,group='CREATOR'){
  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="hsl('+hue+' 74% 42%)"/><stop offset="1" stop-color="hsl('+hue2+' 70% 22%)"/></linearGradient></defs><rect width="128" height="128" rx="64" fill="url(#g)"/><circle cx="96" cy="28" r="30" fill="#fff" fill-opacity=".12"/><circle cx="18" cy="108" r="42" fill="#06111d" fill-opacity=".2"/><path d="M0 92Q64 50 128 92v36H0Z" fill="#071521" fill-opacity=".22"/><text x="64" y="79" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-weight="800" font-size="'+(initials.length>1?43:52)+'" letter-spacing="-2">'+esc(initials)+'</text><circle cx="104" cy="103" r="7" fill="#9df4ff" stroke="#092032" stroke-width="3"/></svg>';
  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
 }
-function youtubeAvatarUrl(channelUrl){
- try{
-  const url=new URL(String(channelUrl||''));
-  if(!/(^|\\.)youtube\\.com$/i.test(url.hostname))return '';
-  const parts=url.pathname.split('/').filter(Boolean);
-  let handle=parts[parts.length-1]||'';
-  if(!handle)return '';
-  handle=handle.replace(/^@/,'');
-  return handle?'https://unavatar.io/youtube/'+encodeURIComponent(handle)+'?fallback=false':'';
- }catch(error){return ''}
-}
 function creatorAvatarMarkup(name,channelUrl,group='CREATOR',preferredImage='',className='game-creator-avatar'){
  const fallback=generatedCreatorAvatarDataUri(name,group);
- const source=preferredImage||youtubeAvatarUrl(channelUrl)||fallback;
+ const source=preferredImage||fallback;
  return '<img class="'+esc(className)+'" src="'+esc(source)+'" data-avatar-fallback="'+esc(fallback)+'" alt="'+esc(name)+' profile image" loading="lazy" decoding="async" onerror="if(this.dataset.avatarFallback){this.onerror=null;this.src=this.dataset.avatarFallback}">';
 }
 function gameArtMarkup(game){
