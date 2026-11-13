@@ -111,7 +111,7 @@ input:not([type=checkbox]):not([type=color]),textarea,select{caret-color:var(--c
 .card,.category,.genre-tile,.brand-tile,.admin-box,.subsection{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
 .card:hover,.category:hover,.genre-tile:hover,.brand-tile:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0003}
 button{position:relative;isolation:isolate}
-.gf-poof{position:absolute;z-index:0;left:50%;top:50%;width:9px;height:9px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#ffffffb8 0 12%,#39d9ef80 35%,transparent 72%);transform:translate(-50%,-50%) scale(.2);animation:gf-poof .48s ease-out forwards}
+.gf-poof{position:absolute;z-index:0;left:0;top:0;width:7px;height:7px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#ffffffb8 0 12%,#39d9ef80 35%,transparent 72%);transform:translate(-50%,-50%) scale(.18);animation:gf-poof .46s ease-out forwards}
 @keyframes gf-poof{0%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}65%{opacity:.5}100%{opacity:0;transform:translate(-50%,-50%) scale(7)}}
 @keyframes gf-fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .admin-mode .admin-box{animation:gf-admin-glow 4s ease-in-out infinite alternate}
@@ -230,7 +230,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
 /* Overview logo alignment and official game-site panel */
-.hero-word{right:4%;width:36%;max-width:none;text-align:center;transform:none;letter-spacing:-2.5px;line-height:1.05;overflow-wrap:anywhere}
+.hero-word{right:5%;width:36%;max-width:none;text-align:center;transform:none;letter-spacing:-2.5px;line-height:1.05;overflow-wrap:anywhere}
 .official-game-website{display:flex;width:min(100%,390px);justify-content:flex-start;gap:12px;margin:18px 0 22px;padding:13px 15px;text-align:left;transition:transform .18s,border-color .18s,box-shadow .18s}
 .official-game-website:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 8px 22px #0003}
 .official-site-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:#39d9ef1a;font-size:18px}
@@ -249,9 +249,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .admin-notification-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .admin-notification-head h3{margin:5px 0 0}
 .admin-notification-head .actions{margin:0}
-.admin-notification-list{min-height:90px;overflow:auto;padding-right:4px}
-.click-wave{position:fixed;z-index:9999;pointer-events:none;width:180px;height:180px;border:2px solid #39d9efb8;border-radius:50%;background:radial-gradient(circle, #39d9ef18 0 35%, #39d9ef0a 54%, transparent 72%);transform:translate(-50%,-50%) scale(.08);animation:click-wave-expand .58s cubic-bezier(.15,.7,.2,1) forwards}
-@keyframes click-wave-expand{0%{opacity:.55;transform:translate(-50%,-50%) scale(.08)}75%{opacity:.28}100%{opacity:0;transform:translate(-50%,-50%) scale(1.15)}}
+.admin-notification-list{position:relative;isolation:isolate;min-height:90px;overflow:auto;padding-right:4px;border-radius:10px}
+.admin-notification-list.is-loading{overflow:hidden}
+.admin-notification-list.is-loading::before{content:"";position:absolute;z-index:4;inset:0;border-radius:10px;background:rgba(7,18,29,.36);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.admin-notification-list.is-loading::after{content:"";position:absolute;z-index:5;left:50%;top:50%;width:31px;height:31px;margin:-17px 0 0 -17px;border:3px solid #39d87830;border-top-color:#39d878;border-right-color:#39d878;border-bottom-color:#39d878;border-radius:50%;box-shadow:0 0 20px #39d87835;animation:gfx-notification-spin .78s linear infinite;pointer-events:none}
+@keyframes gfx-notification-spin{to{transform:rotate(360deg)}}
+.admin-notification-close-button{width:42px;height:42px;min-width:42px;padding:0!important;font-size:27px!important;line-height:1;border-radius:11px}
+.click-wave{position:fixed;z-index:9999;pointer-events:none;width:136px;height:136px;border:1.5px solid #39d9efb8;border-radius:50%;background:radial-gradient(circle, #39d9ef16 0 32%, #39d9ef08 50%, transparent 72%);transform:translate(-50%,-50%) scale(.08);animation:click-wave-expand .55s cubic-bezier(.15,.7,.2,1) forwards}
+@keyframes click-wave-expand{0%{opacity:.52;transform:translate(-50%,-50%) scale(.08)}75%{opacity:.23}100%{opacity:0;transform:translate(-50%,-50%) scale(1.02)}}
 @media(prefers-reduced-motion:reduce){.click-wave{display:none}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"GamerFax","url":"https://gamerfax.netlify.app/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
@@ -343,14 +348,41 @@ function drawPcCategory(id){const c=catalog.pcCategories.find(x=>x.id===id);if(!
 function drawAbbreviations(q=''){mountCatalog('Abbreviations','A searchable, alphabetically sorted gaming and PC glossary.','Search abbreviations...',term=>{const rows=catalog.abbreviations.filter(x=>(x.term+' '+x.meaning+' '+x.category).toLowerCase().includes(term.toLowerCase())).sort((a,b)=>a.term.localeCompare(b.term));return '<div class="subsection"><table class="data-table"><thead><tr><th>Term</th><th>Meaning</th><th>Category</th></tr></thead><tbody>'+rows.map(x=>'<tr><td><b>'+esc(x.term)+'</b></td><td>'+esc(x.meaning)+'</td><td>'+esc(x.category)+'</td></tr>').join('')+'</tbody></table></div>'+(rows.length?'':emptyResults())})}
 function drawBrands(q=''){mountCatalog('Brands','Explore the companies behind gaming hardware and PC components.','Search hardware brands...',term=>{const t=term.toLowerCase().trim();const rows=catalog.brands.filter(b=>(b.name+' '+b.description+' '+b.categories.join(' ')).toLowerCase().includes(t));return '<div class="catalog-grid">'+rows.map(b=>'<button class="brand-tile" data-brand="'+b.id+'"><span class="tag">'+esc(b.categories.slice(0,2).join(' · '))+'</span><h3>'+esc(b.name)+'</h3><p>'+esc(b.description)+'</p><span class="muted">View brand and products ↗</span></button>').join('')+'</div>'+(rows.length?'':emptyResults())})}
 function drawBrand(id){const b=catalog.brands.find(x=>x.id===id);if(!b)return drawBrands();const terms=b.name.toLowerCase();const products=[...catalog.pcParts,...catalog.gear].filter(p=>p.name.toLowerCase().includes(terms)||(b.slug==='western-digital'&&p.name.toLowerCase().includes('wd_'))||(b.slug==='g-skill'&&p.name.toLowerCase().includes('g.skill'))||(b.slug==='dell-alienware'&&p.name.toLowerCase().includes('alienware'))).slice(0,8);shell('Brands / '+b.name,b.description,'<div class="detail"><div class="detail-copy"><span class="tag">HARDWARE BRAND</span><h2>'+esc(b.name)+'</h2><p>'+esc(b.description)+'</p><p><b>Product areas:</b> '+esc(b.categories.join(', '))+'</p><a href="'+esc(b.website_url)+'" target="_blank" rel="noopener">Official '+esc(b.name)+' website ↗</a></div></div><div class="section-block"><h3>Popular products in GamerFax</h3><p>These are examples from our current catalog, not a complete brand inventory.</p><div class="cards">'+products.map(p=>itemCard(p,catalog.pcParts.some(x=>x.id===p.id)?'pcpart':'gear')).join('')+'</div></div><button class="small-action" data-view="brands">← All brands</button>')}
+function setAdminNotificationLoading(loading){
+ const list=$('admin-notification-list');if(!list)return;
+ list.classList.toggle('is-loading',!!loading);
+ list.setAttribute('aria-busy',String(!!loading));
+}
 async function loadAdminNotifications(){
  const list=$('admin-notification-list');if(!list)return;
- list.textContent='Loading notifications...';
- const {data,error}=await db.from('admin_notifications').select('*').order('created_at',{ascending:false}).limit(100);
- if(!document.getElementById('admin-notification-list'))return;
- if(error){list.textContent='Could not load notifications: '+error.message;return}
- list.innerHTML=(data||[]).map(n=>'<div class="notification-card '+(!n.is_read?'unread':'')+'"><div><b>'+esc(n.title)+'</b><p>'+esc(n.message)+'</p>'+(n.email?'<p><b>Account email:</b> '+esc(n.email)+'</p>':'')+'<small>'+new Date(n.created_at).toLocaleString()+' · '+esc(n.kind)+'</small></div><button data-notif-read="'+n.id+'" data-read="'+n.is_read+'">'+(n.is_read?'Read':'Mark read')+'</button></div>').join('')||'<p class="status-note">No notifications yet.</p>';
- list.querySelectorAll('[data-notif-read]').forEach(b=>b.onclick=async()=>{const {error:updateError}=await db.from('admin_notifications').update({is_read:true}).eq('id',b.dataset.notifRead);if(updateError){b.textContent='Could not update';return}await refreshNotificationCount();await loadAdminNotifications()});
+ setAdminNotificationLoading(true);
+ try{
+  const {data,error}=await db.from('admin_notifications').select('*').order('created_at',{ascending:false}).limit(100);
+  if(!list.isConnected)return;
+  if(error){
+   let note=list.querySelector('.notification-load-error');
+   if(!note){note=document.createElement('p');note.className='status-note notification-load-error';list.appendChild(note)}
+   note.textContent='Could not refresh notifications: '+error.message;return;
+  }
+  list.innerHTML=(data||[]).map(n=>'<div class="notification-card '+(!n.is_read?'unread':'')+'"><div><b>'+esc(n.title)+'</b><p>'+esc(n.message)+'</p>'+(n.email?'<p><b>Account email:</b> '+esc(n.email)+'</p>':'')+'<small>'+new Date(n.created_at).toLocaleString()+' · '+esc(n.kind)+'</small></div><button data-notif-read="'+n.id+'" data-read="'+n.is_read+'">'+(n.is_read?'Read':'Mark read')+'</button></div>').join('')||'<p class="status-note">No notifications yet.</p>';
+  list.querySelectorAll('[data-notif-read]').forEach(b=>b.onclick=async()=>{
+   b.disabled=true;setAdminNotificationLoading(true);
+   const {error:updateError}=await db.from('admin_notifications').update({is_read:true}).eq('id',b.dataset.notifRead);
+   if(updateError){
+    setAdminNotificationLoading(false);b.disabled=false;b.textContent='Retry';
+    let note=list.querySelector('.notification-load-error');
+    if(!note){note=document.createElement('p');note.className='status-note notification-load-error';list.appendChild(note)}
+    note.textContent='Could not mark this notification as read: '+updateError.message;return;
+   }
+   await refreshNotificationCount();await loadAdminNotifications();
+  });
+ }catch(error){
+  if(list.isConnected){
+   let note=list.querySelector('.notification-load-error');
+   if(!note){note=document.createElement('p');note.className='status-note notification-load-error';list.appendChild(note)}
+   note.textContent='Could not refresh notifications: '+(error?.message||'Unknown error');
+  }
+ }finally{if(list.isConnected)setAdminNotificationLoading(false)}
 }
 function closeAdminNotifications(){const modal=$('admin-notification-modal');if(modal)modal.remove()}
 function openAdminNotifications(){
@@ -359,7 +391,7 @@ function openAdminNotifications(){
   modal.innerHTML='<section class="admin-notification-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-notification-title"><div class="admin-notification-head"><div><div class="eyebrow">PRIVATE OWNER FEED</div><h3 id="admin-notification-title">Notifications</h3></div><div class="actions"><button class="secondary" id="admin-notification-refresh">Refresh</button><button class="secondary" id="admin-notification-close" aria-label="Close notifications">×</button></div></div><p class="status-note">Suggestions and recent account activity. Only your verified owner account can view these details.</p><div id="admin-notification-list" class="notification-list admin-notification-list"></div></section>';
   modal.addEventListener('click',e=>{if(e.target===modal)closeAdminNotifications()});
   document.body.appendChild(modal);
-  $('admin-notification-close').onclick=closeAdminNotifications;
+  $('admin-notification-close').onclick=closeAdminNotifications;$('admin-notification-close').classList.add('admin-notification-close-button');
   $('admin-notification-refresh').onclick=loadAdminNotifications;
  }
  loadAdminNotifications();
@@ -463,7 +495,7 @@ document.addEventListener('error',e=>{if(e.target&&e.target.tagName==='IMG'){con
 $('global-search').addEventListener('input',renderGlobalSearch);
 $('global-search').addEventListener('keydown',e=>{if(e.key==='Escape'){$('global-search-results').hidden=true;return}if(e.key==='Enter'){const first=$('global-search-results').querySelector('[data-global-open]');if(first){e.preventDefault();openGlobalResult(first.dataset.globalOpen)}}});
 document.addEventListener('click',e=>{if(!e.target.closest('.global-search-wrap'))$('global-search-results').hidden=true});
-document.addEventListener('click',e=>{const target=e.target.closest('button:not([disabled])');if(!target||target.classList.contains('gf-no-poof'))return;const puff=document.createElement('span');puff.className='gf-poof';target.appendChild(puff);puff.addEventListener('animationend',()=>puff.remove(),{once:true})});
+document.addEventListener('click',e=>{const target=e.target.closest('button:not([disabled])');if(!target||target.classList.contains('gf-no-poof'))return;const puff=document.createElement('span');puff.className='gf-poof';const rect=target.getBoundingClientRect();puff.style.left=(e.clientX-rect.left)+'px';puff.style.top=(e.clientY-rect.top)+'px';target.appendChild(puff);puff.addEventListener('animationend',()=>puff.remove(),{once:true})});
 $('theme').onclick=()=>{shell('Theme settings','Choose how GamerFax looks.','<div class="settings"><div class="setting"><h3>Appearance</h3><div class="choices"><button class="choice" data-theme-choice="dark">◐ Dark</button><button class="choice" data-theme-choice="light">☼ Light</button><button class="choice" data-theme-choice="system">◉ Custom default</button></div></div><div class="setting"><h3>Custom default palette</h3><p>Choose the base color for your custom dark palette.</p><input id="system-color-picker" type="color" value="'+(localStorage.getItem('gamerfax-system-color')||'#39d9ef')+'"></div></div>');markTheme()};
 function applySystemPalette(c){const n=parseInt(c.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255,max=Math.max(r,g,b)/255,min=Math.min(r,g,b)/255,d=max-min;let hue=0;if(d){if(max===r/255)hue=60*(((g-b)/255/d)%6);else if(max===g/255)hue=60*((b-r)/255/d+2);else hue=60*((r-g)/255/d+4)}hue=(hue+360)%360;const root=document.documentElement;root.style.setProperty('--custom-bg','hsl('+hue+' 30% 7%)');root.style.setProperty('--custom-panel','hsl('+hue+' 28% 11%)');root.style.setProperty('--custom-panel2','hsl('+hue+' 30% 15%)');root.style.setProperty('--custom-line','hsl('+hue+' 28% 22%)');root.style.setProperty('--custom-sidebar','hsl('+hue+' 32% 8%)');root.style.setProperty('--custom-top','hsla('+hue+',32%,8%,.94)');root.style.setProperty('--custom-glow','hsl('+hue+' 45% 23%)');root.style.setProperty('--custom-accent',c);localStorage.setItem('gamerfax-system-color',c)}
 function setTheme(v){localStorage.setItem('gamerfax-theme',v);document.body.classList.toggle('light',v==='light');document.body.classList.toggle('custom-theme',v==='system');if(v==='system')applySystemPalette(localStorage.getItem('gamerfax-system-color')||'#39d9ef');markTheme()}
