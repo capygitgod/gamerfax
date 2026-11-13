@@ -7,7 +7,7 @@ A responsive gaming and technology discovery directory with cyan-accented stylin
 - Gaming gear and PC components with product photos where available, consistent sizing and fallback artwork
 - Game creators linked to their channels, with saved YouTube profile thumbnails for selected creators and generated monogram fallbacks
 - Technology creators and their channels, with profile photos or generated monogram thumbnails
-- A sourced news feed for gaming, technology and Pixelpedia updates
+- A sourced news feed for gaming, technology and Pixelpedia updates, with optional credited article images and clean fallbacks
 - Brand, platform and gaming abbreviation directories
 - PC-building resources including PCPartPicker and Logical Increments
 
@@ -20,7 +20,7 @@ A responsive gaming and technology discovery directory with cyan-accented stylin
 - Private, owner-only content management
 - Owner-only notification centre
 - News publication controls and creator-directory editing
-- Manually curated, source-linked news rather than an automatic scraper
+- News is currently manually curated and source-linked; an RSS/API importer with duplicate filtering and owner approval can be added later
 
 ## Run locally
 Open `index.html` in a browser. The site uses Supabase for its catalogue and account features.
