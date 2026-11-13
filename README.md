@@ -1,23 +1,26 @@
-# GamerFax
+# Pixelpedia
 
-A responsive, cyan-accented gaming discovery hub.
+A responsive gaming and technology discovery directory with cyan-accented styling.
 
-## Current starter features
-- Responsive homepage and mobile navigation
-- Games, gaming gear, and platforms/tools sections
-- Dark/light theme toggle (saved in this browser)
-- Save/favorite buttons (saved in this browser)
-- Featured discovery cards
+## Explore
+- Game genres, individual game pages and game creators
+- Gaming gear and PC components
+- Technology creators and their channels
+- A sourced news feed for gaming, technology and Pixelpedia updates
+- Brand, platform and gaming abbreviation directories
+
+## Accounts and management
+- Public browsing
+- Email-verified user accounts
+- Signed-in community suggestions
+- Private, owner-only content management
+- Owner-only notification centre
+- News publication controls and creator-directory editing
 
 ## Run locally
-Open `index.html` in a browser.
+Open `index.html` in a browser. The site uses Supabase for its catalogue and account features.
 
-## Deploy with Netlify
-1. Sign in to Netlify and choose **Add new site → Import an existing project**.
-2. Connect GitHub and select `capygitgod/gamerfax`.
-3. Leave the build command blank.
-4. Set the publish directory to `.`.
-5. Deploy.
+## Cloudflare Workers
+This repository is a static HTML site. Cloudflare Workers Builds can connect the repository to a Worker and deploy changes from the selected Git branch. Review any Wrangler configuration pull request Cloudflare generates and make sure its Worker name matches the Worker created in the dashboard.
 
-## Not connected yet
-Real accounts, database-backed content, full search, game detail pages, and secure admin/moderator roles are future development items. Do not put passwords or secret keys in this public repository.
+Keep public client configuration separate from private credentials. Never commit passwords, service-role keys, API tokens or other secrets to this repository.
