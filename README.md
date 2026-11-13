@@ -11,11 +11,13 @@ A responsive gaming and technology discovery directory with cyan-accented stylin
 
 ## Accounts and management
 - Public browsing
-- Email-verified user accounts
+- Email-verified user accounts with customizable profiles and avatars
+- Saved games, gear and PC parts stored in the visitor's browser
 - Signed-in community suggestions
 - Private, owner-only content management
 - Owner-only notification centre
 - News publication controls and creator-directory editing
+- Manually curated, source-linked news rather than an automatic scraper
 
 ## Run locally
 Open `index.html` in a browser. The site uses Supabase for its catalogue and account features.
