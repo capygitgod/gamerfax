@@ -424,6 +424,13 @@ function productCategoryName(x,kind){
 }
 function productArtDataUri(x,kind){
  const category=productCategoryName(x,kind),c=category.toLowerCase();
+ const name=String(x.name||'Gaming product');
+ const hash=pixelHash(name+'|'+category);
+ const hue=hash%360,hue2=(hue+55+(hash%75))%360;
+ const accent='hsl('+hue+' 82% 66%)';
+ const pale='hsl('+hue+' 80% 88%)';
+ const deep='hsl('+hue+' 42% 17%)';
+ const mid='hsl('+hue2+' 46% 25%)';
  let shape='';
  if(c.includes('mice'))shape='<path d="M400 65c-95 0-140 70-140 170v80c0 90 55 140 140 140s140-50 140-140v-80C540 135 495 65 400 65Z" fill="#132b40" stroke="#b8f6ff" stroke-width="10"/><path d="M400 70v120" stroke="#39d9ef" stroke-width="9"/><rect x="385" y="120" width="30" height="65" rx="15" fill="#39d9ef"/>';
  else if(c.includes('keyboards'))shape='<rect x="130" y="145" width="540" height="240" rx="24" fill="#132b40" stroke="#b8f6ff" stroke-width="10"/>'+Array.from({length:4},(_,r)=>Array.from({length:r===3?9:13},(_,i)=>'<rect x="'+(155+i*(r===3?55:39))+'" y="'+(175+r*48)+'" width="'+(r===3?43:30)+'" height="30" rx="5" fill="#23546b" stroke="#39d9ef" stroke-width="2"/>').join('')).join('');
@@ -443,8 +450,11 @@ function productArtDataUri(x,kind){
  else if(c.includes('coolers'))shape='<rect x="140" y="145" width="520" height="220" rx="25" fill="#132b40" stroke="#b8f6ff" stroke-width="10"/>'+Array.from({length:3},(_,i)=>'<circle cx="'+(255+i*145)+'" cy="255" r="68" fill="#0d1b2b" stroke="#39d9ef" stroke-width="11"/><circle cx="'+(255+i*145)+'" cy="255" r="20" fill="#b8f6ff"/>').join('');
  else if(c.includes('case fans'))shape='<circle cx="400" cy="250" r="165" fill="#132b40" stroke="#b8f6ff" stroke-width="10"/><circle cx="400" cy="250" r="42" fill="#39d9ef"/>'+Array.from({length:7},(_,i)=>'<path d="M400 250q-35-85 12-112 60 23 12 112Z" transform="rotate('+(i*51.43)+' 400 250)" fill="#23546b" stroke="#39d9ef" stroke-width="4"/>').join('');
  else shape='<rect x="170" y="105" width="460" height="310" rx="28" fill="#132b40" stroke="#b8f6ff" stroke-width="10"/><rect x="215" y="150" width="370" height="220" rx="15" fill="#174b61"/><path d="M270 220h260m-260 60h190m-190 45h140" stroke="#39d9ef" stroke-width="12" stroke-linecap="round"/>';
- const title=String(x.name||'Gaming product').slice(0,38),type=category.toUpperCase().slice(0,34);
- const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10243a"/><stop offset="1" stop-color="#07111e"/></linearGradient><radialGradient id="glow"><stop stop-color="#39d9ef" stop-opacity=".25"/><stop offset="1" stop-color="#39d9ef" stop-opacity="0"/></radialGradient></defs><rect width="800" height="520" rx="28" fill="url(#bg)"/><circle cx="600" cy="175" r="300" fill="url(#glow)"/><path d="M0 410Q200 350 400 420T800 405V520H0Z" fill="#0b1b2c" opacity=".8"/>'+shape+'<text x="400" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#edfaff">'+esc(title)+'</text><text x="400" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" letter-spacing="3" fill="#65ddeb">'+esc(type)+' · PIXELPEDIA ART</text></svg>';
+ const recolored=shape.replaceAll('#132b40',deep).replaceAll('#0d1b2b',deep).replaceAll('#174b61',mid).replaceAll('#23546b',accent).replaceAll('#39d9ef',accent).replaceAll('#b8f6ff',pale);
+ const title=esc(name.slice(0,38)),type=esc(category.toUpperCase().slice(0,34));
+ const angle=((hash>>>8)%11)-5,scale=.91+((hash>>>16)%16)/100;
+ const motif=(hash%3===0?'<circle cx="650" cy="105" r="48" fill="none" stroke="'+pale+'" stroke-opacity=".28" stroke-width="3"/><circle cx="650" cy="105" r="25" fill="none" stroke="'+accent+'" stroke-opacity=".5" stroke-width="3"/>':hash%3===1?'<path d="M570 65h120m-95 16h95m-70 16h70" stroke="'+pale+'" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>':'<path d="M590 70l70 0 35 60-35 60h-70l-35-60Z" fill="none" stroke="'+accent+'" stroke-opacity=".35" stroke-width="4"/>');
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+deep+'"/><stop offset="1" stop-color="#07111e"/></linearGradient><radialGradient id="glow"><stop stop-color="'+accent+'" stop-opacity=".38"/><stop offset="1" stop-color="'+accent+'" stop-opacity="0"/></radialGradient></defs><rect width="800" height="520" rx="28" fill="url(#bg)"/><circle cx="'+(530+(hash%160))+'" cy="'+(100+((hash>>>9)%130))+'" r="'+(220+(hash%80))+'" fill="url(#glow)"/>'+motif+'<g transform="translate(400 260) rotate('+angle+') scale('+scale+') translate(-400 -260)">'+recolored+'</g><path d="M0 410Q200 350 400 420T800 405V520H0Z" fill="#06101c" opacity=".65"/><text x="400" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#edfaff">'+title+'</text><text x="400" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" letter-spacing="3" fill="'+pale+'">'+type+' · ILLUSTRATIVE ART</text></svg>';
  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
 }
 function isSaved(kind,id){return saved.some(entry=>entry.kind===kind&&String(entry.id)===String(id))}
