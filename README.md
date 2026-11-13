@@ -3,8 +3,9 @@
 A responsive gaming and technology discovery directory with cyan-accented styling.
 
 ## Explore
-- Game genres, individual game pages and game creators with generated artwork where no official cover is available
-- Gaming gear and PC components with product photos where available and consistent fallback artwork
+- Game genres and individual game pages; real covers are fully contained, and games without covers use a simple title treatment
+- Gaming gear and PC components with product photos where available, consistent sizing and fallback artwork
+- Game creators linked to their channels, with saved YouTube profile thumbnails for selected creators and generated monogram fallbacks
 - Technology creators and their channels, with profile photos or generated monogram thumbnails
 - A sourced news feed for gaming, technology and Pixelpedia updates
 - Brand, platform and gaming abbreviation directories
