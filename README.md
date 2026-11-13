@@ -3,15 +3,17 @@
 A responsive gaming and technology discovery directory with cyan-accented styling.
 
 ## Explore
-- Game genres, individual game pages and game creators
-- Gaming gear and PC components
-- Technology creators and their channels
+- Game genres, individual game pages and game creators with generated artwork where no official cover is available
+- Gaming gear and PC components with product photos where available and consistent fallback artwork
+- Technology creators and their channels, with profile photos or generated monogram thumbnails
 - A sourced news feed for gaming, technology and Pixelpedia updates
 - Brand, platform and gaming abbreviation directories
+- PC-building resources including PCPartPicker and Logical Increments
 
 ## Accounts and management
 - Public browsing
 - Email-verified user accounts with customizable profiles and avatars
+- Email-verified password reset/change flow
 - Saved games, gear and PC parts stored in the visitor's browser
 - Signed-in community suggestions
 - Private, owner-only content management
