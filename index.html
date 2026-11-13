@@ -417,6 +417,37 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 @media(max-width:650px){.product-detail-media{height:250px!important;min-height:250px;max-height:250px}}
 
+
+/* Final interaction polish and the wide official Minecraft key art. */
+.art.game-art img.game-cover-minecraft{
+  object-fit:cover!important;
+  object-position:50% 50%!important;
+  padding:0!important;
+}
+.card,.category,.genre-tile,.brand-tile,.platform-card,.news-card,
+.primary,.secondary,.small-action,.choice,.creator-link{
+  transition:transform .2s cubic-bezier(.2,.7,.2,1),border-color .2s ease,
+    box-shadow .2s ease,background-color .2s ease,filter .2s ease;
+}
+@media(hover:hover){
+  .category:hover,.genre-tile:hover,.brand-tile:hover{
+    transform:translateY(-2px);border-color:var(--cyan);
+    box-shadow:0 10px 26px #00000020;
+  }
+  .primary:hover,.secondary:hover,.small-action:hover,.choice:hover,.creator-link:hover{
+    filter:brightness(1.06);transform:translateY(-1px);
+  }
+}
+.card:focus-within,.platform-card:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:3px;
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixelpedia","url":"https://pixelpedia.capygod.workers.dev/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
 <aside class="sidebar" id="sidebar"><div class="brand">Pixel<span>pedia</span></div><div class="brand-by">by <a href="https://www.youtube.com/@CapyGodYT" target="_blank" rel="noopener">CapyGodYT ↗</a></div><div class="side-label">DISCOVER</div><nav class="nav"><button class="active" data-view="home">⌂ &nbsp; Overview</button><button data-view="games">▣ &nbsp; Games</button><button data-view="gear">⌁ &nbsp; Gaming gear</button><button data-view="pcparts">▦ &nbsp; PC parts</button><button data-view="abbreviations">Aa &nbsp; Abbreviations</button><button data-view="brands">◇ &nbsp; Brands</button><button data-view="platforms">◈ &nbsp; Platforms & tools</button><button data-view="suggest" id="suggest-nav">✉ &nbsp; Suggest content</button><button data-view="saved">♡ &nbsp; Saved items</button><button data-view="news">▤ &nbsp; News</button><button data-view="irl-creators">◎ &nbsp; IRL creators</button><button data-view="admin" id="admin-nav" style="display:none">⚙ &nbsp; Admin dashboard</button></nav><div class="aside-note">✦ &nbsp; YOUR GAMING HUB<br><b>Discover more. Play your way.</b><br>Games, gear and tools in one place.</div></aside>
@@ -471,7 +502,8 @@ function creatorAvatarMarkup(name,channelUrl,group='CREATOR',preferredImage='',c
 function gameArtMarkup(game){
  const title=String(game?.name||'Game');
  if(!game?.image_url)return '<span class="game-cover-placeholder">'+esc(title)+'</span>';
- return '<img src="'+esc(game.image_url)+'" alt="'+esc(title)+' cover artwork" loading="lazy" decoding="async" onerror="this.onerror=null;const box=this.parentElement;box.classList.add(\'is-placeholder\');box.textContent=this.alt">';
+ const minecraft=title.trim().toLowerCase()==='minecraft';
+ return '<img class="game-cover-image'+(minecraft?' game-cover-minecraft':'')+'" src="'+esc(game.image_url)+'" alt="'+esc(title)+' cover artwork" loading="lazy" decoding="async" onerror="this.onerror=null;const box=this.parentElement;box.classList.add(\'is-placeholder\');box.textContent=this.alt">';
 }
 
 async function loadData(){
