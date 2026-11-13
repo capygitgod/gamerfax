@@ -649,7 +649,7 @@ function drawPlatforms(){
  const body='<div class="platform-grid">'+platformTools.map(tool=>{
   const initials=esc(tool.name.split(' ').slice(0,2).map(part=>part[0]).join('').toUpperCase());
   const art=tool.image
-   ?'<img src="'+esc(tool.image)+'" alt="'+esc(tool.name)+' logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.classList.add(\'is-placeholder\');this.remove()">'
+   ?'<img src="'+esc(tool.image)+'" alt="'+esc(tool.name)+' logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.classList.remove(\'has-image\');this.parentElement.classList.add(\'is-placeholder\');this.remove()">'
    :'<span class="platform-art-name">'+esc(tool.name)+'</span>';
   return '<a class="platform-card" href="'+esc(tool.url)+'" target="_blank" rel="noopener noreferrer"><div class="platform-card-art'+(tool.image?' has-image':' is-placeholder')+'">'+art+'<span class="platform-art-mark">'+initials+'</span></div><div class="platform-card-copy"><span class="tag">'+esc(tool.type)+'</span><h3>'+esc(tool.name)+'</h3><p>'+esc(tool.description)+'</p><span class="platform-card-link">Visit website ↗</span></div></a>';
  }).join('')+'</div>';
