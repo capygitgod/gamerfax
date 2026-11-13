@@ -398,6 +398,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
  .detail .art.game-art{height:235px!important;min-height:235px;max-height:235px}
 }
 
+
+/* Give the two-column product detail image the same full-frame treatment. */
+.product-detail-media{
+ height:320px!important;min-height:320px;max-height:320px;
+ padding:18px!important;box-sizing:border-box;overflow:hidden!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ background:#f3f5f7!important;
+}
+.product-detail-media img.product-image{
+ display:block!important;position:static!important;float:none!important;
+ width:100%!important;height:100%!important;
+ max-width:100%!important;max-height:100%!important;
+ min-width:0!important;min-height:0!important;
+ margin:0 auto!important;padding:0!important;box-sizing:border-box!important;
+ object-fit:contain!important;object-position:center center!important;
+ transform:none!important;flex:0 1 auto!important;
+}
+@media(max-width:650px){.product-detail-media{height:250px!important;min-height:250px;max-height:250px}}
+
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixelpedia","url":"https://pixelpedia.capygod.workers.dev/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
 <aside class="sidebar" id="sidebar"><div class="brand">Pixel<span>pedia</span></div><div class="brand-by">by <a href="https://www.youtube.com/@CapyGodYT" target="_blank" rel="noopener">CapyGodYT ↗</a></div><div class="side-label">DISCOVER</div><nav class="nav"><button class="active" data-view="home">⌂ &nbsp; Overview</button><button data-view="games">▣ &nbsp; Games</button><button data-view="gear">⌁ &nbsp; Gaming gear</button><button data-view="pcparts">▦ &nbsp; PC parts</button><button data-view="abbreviations">Aa &nbsp; Abbreviations</button><button data-view="brands">◇ &nbsp; Brands</button><button data-view="platforms">◈ &nbsp; Platforms & tools</button><button data-view="suggest" id="suggest-nav">✉ &nbsp; Suggest content</button><button data-view="saved">♡ &nbsp; Saved items</button><button data-view="news">▤ &nbsp; News</button><button data-view="irl-creators">◎ &nbsp; IRL creators</button><button data-view="admin" id="admin-nav" style="display:none">⚙ &nbsp; Admin dashboard</button></nav><div class="aside-note">✦ &nbsp; YOUR GAMING HUB<br><b>Discover more. Play your way.</b><br>Games, gear and tools in one place.</div></aside>
