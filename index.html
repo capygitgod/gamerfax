@@ -336,17 +336,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .game-creator-avatar{display:inline-block;flex:0 0 34px;width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:middle;background:var(--panel2)}
 .creator-link{align-items:center;gap:9px}
 .creator-directory-avatar-image{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;background:var(--panel2)}
-.news-card-art{height:155px;margin:-18px -18px 15px;overflow:hidden;background:#0b1523}
-.news-card-art img{display:block;width:100%;height:100%;object-fit:cover}
-.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.platform-card{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel);color:var(--text);text-decoration:none;transition:transform .18s,border-color .18s,box-shadow .18s}
+.news-card-art{height:170px;margin:-18px -18px 15px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#10243a,#0b1523)}
+.news-card-art img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;padding:10px 14px}
+.news-card-art.is-placeholder{background:linear-gradient(135deg,#122338,#0b1523 72%,#123344)}
+.news-art-placeholder{display:block;max-width:90%;color:#eaf7ff;font:800 clamp(18px,2vw,26px)/1.2 'Space Grotesk',sans-serif;letter-spacing:-.3px;text-align:center;overflow-wrap:anywhere}
+.news-card-art.has-image{background:#0b1523}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;align-items:stretch}
+.platform-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel);color:var(--text);text-decoration:none;transition:transform .18s,border-color .18s,box-shadow .18s}
 .platform-card:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 9px 24px #0002}
-.platform-card-art{height:148px;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--panel2)}
-.platform-card-art>span{font:800 45px 'Space Grotesk';letter-spacing:-2px;color:var(--cyan);opacity:.68}
-.platform-card-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f7f8fa;padding:12px}
-.platform-card-copy{padding:16px}
+.platform-card-art{height:156px;min-height:156px;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--panel2);padding:16px}
+.platform-card-art.has-image{background:#f5f7fa}
+.platform-card-art img{display:block;position:relative;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;padding:0}
+.platform-art-name{display:block;max-width:90%;color:var(--text);font:800 clamp(20px,2.3vw,29px)/1.15 'Space Grotesk',sans-serif;text-align:center;letter-spacing:-.5px;overflow-wrap:anywhere}
+.platform-art-mark{position:absolute;right:10px;bottom:8px;font:700 10px 'Space Grotesk';letter-spacing:.5px;color:var(--muted);opacity:.65}
+.platform-card-art.has-image .platform-art-mark{display:none}
+.platform-card-copy{padding:16px;display:flex;flex:1;flex-direction:column}
 .platform-card-copy h3{margin:6px 0 7px}
-.platform-card-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+.platform-card-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.6;flex:1}
 .platform-card-link{display:inline-flex;margin-top:14px;color:var(--cyan);font-size:11px;font-weight:800}
 @media(max-width:560px){.platform-grid{grid-template-columns:1fr}.news-card-art{margin:-16px -16px 14px}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixelpedia","url":"https://pixelpedia.capygod.workers.dev/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
@@ -641,9 +647,11 @@ const platformTools=[
 ];
 function drawPlatforms(){
  const body='<div class="platform-grid">'+platformTools.map(tool=>{
-  const art=tool.image||generatedArtworkDataUri(tool.name,tool.type);
   const initials=esc(tool.name.split(' ').slice(0,2).map(part=>part[0]).join('').toUpperCase());
-  return '<a class="platform-card" href="'+esc(tool.url)+'" target="_blank" rel="noopener noreferrer"><div class="platform-card-art"><span>'+initials+'</span><img src="'+esc(art)+'" alt="" loading="lazy" decoding="async" onerror="this.remove()"></div><div class="platform-card-copy"><span class="tag">'+esc(tool.type)+'</span><h3>'+esc(tool.name)+'</h3><p>'+esc(tool.description)+'</p><span class="platform-card-link">Visit website ↗</span></div></a>';
+  const art=tool.image
+   ?'<img src="'+esc(tool.image)+'" alt="'+esc(tool.name)+' logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.classList.add(\'is-placeholder\');this.remove()">'
+   :'<span class="platform-art-name">'+esc(tool.name)+'</span>';
+  return '<a class="platform-card" href="'+esc(tool.url)+'" target="_blank" rel="noopener noreferrer"><div class="platform-card-art'+(tool.image?' has-image':' is-placeholder')+'">'+art+'<span class="platform-art-mark">'+initials+'</span></div><div class="platform-card-copy"><span class="tag">'+esc(tool.type)+'</span><h3>'+esc(tool.name)+'</h3><p>'+esc(tool.description)+'</p><span class="platform-card-link">Visit website ↗</span></div></a>';
  }).join('')+'</div>';
  shell('Platforms & tools','Useful gaming services, storefronts and PC-building resources. External services open in a new tab.',body);
 }
@@ -660,7 +668,12 @@ function drawNews(){
   return byDate||Number(a.sort_order||0)-Number(b.sort_order||0);
  });
  const body=rows.length
-  ?'<div class="news-feed">'+rows.map(item=>'<article class="news-card"><div class="news-card-art"><img src="'+generatedArtworkDataUri(item.title,item.category||'NEWS')+'" alt="" loading="lazy" decoding="async"></div><div class="news-card-meta"><span class="news-category">'+esc(item.category||'Technology')+'</span><time datetime="'+esc(item.published_date||'')+'">'+esc(formatPixelpediaDate(item.published_date))+'</time></div><h3>'+esc(item.title)+'</h3><p>'+esc(item.summary)+'</p><div class="news-card-footer"><span>Source: '+esc(item.source_name||'Pixelpedia')+'</span>'+(item.source_url?'<a href="'+esc(item.source_url)+'" target="_blank" rel="noopener noreferrer">Read original ↗</a>':'')+'</div></article>').join('')+'</div>'
+  ?'<div class="news-feed">'+rows.map(item=>{
+    const art=item.image_url
+     ?'<img src="'+esc(item.image_url)+'" alt="'+esc(item.title)+'" loading="lazy" decoding="async" onerror="this.onerror=null;this.parentElement.classList.add(\'is-placeholder\');this.remove()">'
+     :'<span class="news-art-placeholder">'+esc(item.category||'PIXELPEDIA NEWS')+'</span>';
+    return '<article class="news-card"><div class="news-card-art'+(item.image_url?' has-image':' is-placeholder')+'">'+art+'</div><div class="news-card-meta"><span class="news-category">'+esc(item.category||'Technology')+'</span><time datetime="'+esc(item.published_date||'')+'">'+esc(formatPixelpediaDate(item.published_date))+'</time></div><h3>'+esc(item.title)+'</h3><p>'+esc(item.summary)+'</p><div class="news-card-footer"><span>Source: '+esc(item.source_name||'Pixelpedia')+'</span>'+(item.source_url?'<a href="'+esc(item.source_url)+'" target="_blank" rel="noopener noreferrer">Read original ↗</a>':'')+'</div></article>';
+   }).join('')+'</div>'
   :'<div class="news-empty"><div class="news-empty-symbol">▤</div><h3>No news right now</h3><p>There are no published updates at the moment. Check back later — new gaming and technology stories will appear here.</p></div>';
  shell('News','Gaming, technology-industry and Pixelpedia updates. We add stories with a clear source and publication date.',body);
 }
