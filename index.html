@@ -324,6 +324,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .password-recovery-panel input{display:block;width:100%;height:44px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font:inherit;box-sizing:border-box}
 .password-recovery-panel button{margin-top:16px}
 .password-recovery-panel .hint{overflow-wrap:anywhere}
+
+/* Game art, creator art, news art and tools card layout */
+.art.game-art{padding:0;background:#0b1523;overflow:hidden}
+.art.game-art img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
+.game-creator-avatar{display:inline-block;flex:0 0 26px;width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:middle}
+.creator-link{align-items:center;gap:7px}
+.news-card-art{height:155px;margin:-18px -18px 15px;overflow:hidden;background:#0b1523}
+.news-card-art img{display:block;width:100%;height:100%;object-fit:cover}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.platform-card{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:var(--panel);color:var(--text);text-decoration:none;transition:transform .18s,border-color .18s,box-shadow .18s}
+.platform-card:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 9px 24px #0002}
+.platform-card-art{height:148px;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--panel2)}
+.platform-card-art>span{font:800 45px 'Space Grotesk';letter-spacing:-2px;color:var(--cyan);opacity:.68}
+.platform-card-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f7f8fa;padding:12px}
+.platform-card-copy{padding:16px}
+.platform-card-copy h3{margin:6px 0 7px}
+.platform-card-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+.platform-card-link{display:inline-flex;margin-top:14px;color:var(--cyan);font-size:11px;font-weight:800}
+@media(max-width:560px){.platform-grid{grid-template-columns:1fr}.news-card-art{margin:-16px -16px 14px}}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixelpedia","url":"https://pixelpedia.capygod.workers.dev/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
 <aside class="sidebar" id="sidebar"><div class="brand">Pixel<span>pedia</span></div><div class="brand-by">by <a href="https://www.youtube.com/@CapyGodYT" target="_blank" rel="noopener">CapyGodYT ↗</a></div><div class="side-label">DISCOVER</div><nav class="nav"><button class="active" data-view="home">⌂ &nbsp; Overview</button><button data-view="games">▣ &nbsp; Games</button><button data-view="gear">⌁ &nbsp; Gaming gear</button><button data-view="pcparts">▦ &nbsp; PC parts</button><button data-view="abbreviations">Aa &nbsp; Abbreviations</button><button data-view="brands">◇ &nbsp; Brands</button><button data-view="platforms">◈ &nbsp; Platforms & tools</button><button data-view="suggest" id="suggest-nav">✉ &nbsp; Suggest content</button><button data-view="saved">♡ &nbsp; Saved items</button><button data-view="news">▤ &nbsp; News</button><button data-view="irl-creators">◎ &nbsp; IRL creators</button><button data-view="admin" id="admin-nav" style="display:none">⚙ &nbsp; Admin dashboard</button></nav><div class="aside-note">✦ &nbsp; YOUR GAMING HUB<br><b>Discover more. Play your way.</b><br>Games, gear and tools in one place.</div></aside>
@@ -356,6 +375,21 @@ news:{table:'news_items',label:'News items',fields:['title','category','summary'
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function pixelHash(value){let hash=2166136261;for(const char of String(value||'')){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}return hash>>>0}
+function generatedArtworkDataUri(title,category='PIXELPEDIA'){
+ const hash=pixelHash(title+'|'+category),hue=hash%360,hue2=(hue+54+(hash%60))%360;
+ const cleanTitle=esc(String(title||'Pixelpedia').slice(0,32).toUpperCase());
+ const cleanCategory=esc(String(category||'DISCOVER').slice(0,26).toUpperCase());
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="hsl('+hue+' 58% 20%)"/><stop offset="1" stop-color="hsl('+hue2+' 52% 8%)"/></linearGradient><radialGradient id="glow"><stop stop-color="hsl('+hue+' 90% 65%)" stop-opacity=".62"/><stop offset="1" stop-color="hsl('+hue+' 90% 50%)" stop-opacity="0"/></radialGradient></defs><rect width="720" height="420" fill="url(#bg)"/><circle cx="560" cy="110" r="230" fill="url(#glow)"/><path d="M0 345 170 245l115 65 140-150 295 190v70H0Z" fill="#07111d" fill-opacity=".46"/><path d="M0 375 190 285l110 70 156-122 264 135v52H0Z" fill="#39d9ef" fill-opacity=".13"/><g fill="none" stroke="#c2fbff" stroke-opacity=".22" stroke-width="2"><path d="M42 52h96M42 62h54M620 54h48M620 65h70M46 312h84M595 300h78"/></g><rect x="38" y="42" width="160" height="29" rx="14" fill="#07111d" fill-opacity=".64" stroke="#b6f4ff" stroke-opacity=".3"/><text x="55" y="61" fill="#9ef3ff" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2">'+cleanCategory+'</text><text x="44" y="250" fill="#f4fbff" font-family="Arial,sans-serif" font-size="42" font-weight="800" textLength="620" lengthAdjust="spacingAndGlyphs">'+cleanTitle+'</text><text x="48" y="282" fill="#bcebf3" font-family="Arial,sans-serif" font-size="15" letter-spacing="3">PIXELPEDIA</text><circle cx="630" cy="350" r="7" fill="#39d9ef"/><circle cx="655" cy="350" r="7" fill="#f3f8ff" fill-opacity=".72"/><circle cx="680" cy="350" r="7" fill="#39d9ef" fill-opacity=".45"/></svg>';
+ return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+function generatedCreatorAvatarDataUri(name,group='CREATOR'){
+ const hash=pixelHash(name+'|'+group),hue=hash%360,hue2=(hue+72)%360;
+ const initials=String(name||'PX').trim().split(' ').filter(Boolean).slice(0,2).map(part=>part[0]).join('').toUpperCase()||'PX';
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="hsl('+hue+' 74% 42%)"/><stop offset="1" stop-color="hsl('+hue2+' 70% 22%)"/></linearGradient></defs><rect width="128" height="128" rx="64" fill="url(#g)"/><circle cx="96" cy="28" r="30" fill="#fff" fill-opacity=".12"/><circle cx="18" cy="108" r="42" fill="#06111d" fill-opacity=".2"/><path d="M0 92Q64 50 128 92v36H0Z" fill="#071521" fill-opacity=".22"/><text x="64" y="79" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-weight="800" font-size="'+(initials.length>1?43:52)+'" letter-spacing="-2">'+esc(initials)+'</text><circle cx="104" cy="103" r="7" fill="#9df4ff" stroke="#092032" stroke-width="3"/></svg>';
+ return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+
 async function loadData(){
  const entries=Object.entries(tables);
  const results=await Promise.all(entries.map(async([key,v])=>{const {data,error}=await db.from(v.table).select("*").order("sort_order",{ascending:true});if(error)throw error;catalog[key]=data||[]}));
@@ -417,11 +451,14 @@ function itemCard(x,kind){
  const parent=kind==='game'?catalog.genres.find(z=>z.id===x.genre_id)?.name:kind==='gear'?catalog.gearCategories.find(z=>z.id===x.category_id)?.name:kind==='pcpart'?catalog.pcCategories.find(z=>z.id===x.category_id)?.name:'';
  const categoryLabel=x.category||parent||x.slug||'Pixelpedia',isProduct=kind==='gear'||kind==='pcpart';
  const fallback=isProduct?productArtDataUri(x,kind):'';
+ const gameArtwork=kind==='game'?(x.image_url||generatedArtworkDataUri(x.name,parent||'GAME')):'';
  const imageMarkup=isProduct
   ?'<img src="'+esc(x.image_url||fallback)+'" data-fallback="'+esc(fallback)+'" data-fallback-mode="0" data-fallback-label="Pixelpedia product artwork" alt="'+esc(x.name||'Gaming product')+'" loading="lazy" decoding="async" onerror="if(this.dataset.fallbackMode==0){this.dataset.fallbackMode=1;this.src=this.dataset.fallback;return}this.onerror=null;this.alt=this.dataset.fallbackLabel">'
-  :x.image_url?'<img src="'+esc(x.image_url)+'" alt="'+esc(x.name||x.term||'Pixelpedia artwork')+'" loading="lazy" decoding="async">':'';
- const artClass=(isProduct||x.image_url)?'product-art':'';
- const artContent=isProduct||x.image_url?imageMarkup:esc((kind==='pcpart'?'PC COMPONENT':kind==='game'?(x.name||'GAME').toUpperCase():kind==='gear'?'GAMING GEAR':(x.name||x.term||'').toUpperCase()));
+  :kind==='game'
+   ?'<img src="'+esc(gameArtwork)+'" alt="'+esc(x.name||'Game')+' cover artwork" loading="lazy" decoding="async">'
+   :x.image_url?'<img src="'+esc(x.image_url)+'" alt="'+esc(x.name||x.term||'Pixelpedia artwork')+'" loading="lazy" decoding="async">':'';
+ const artClass=isProduct?'product-art':kind==='game'?'game-art':x.image_url?'product-art':'';
+ const artContent=isProduct||kind==='game'||x.image_url?imageMarkup:esc((kind==='pcpart'?'PC COMPONENT':kind==='gear'?'GAMING GEAR':(x.name||x.term||'').toUpperCase()));
  const saveControl=['game','gear','pcpart'].includes(kind)?'<div class="card-actions">'+saveButtonMarkup(kind,id)+'</div>':'';
  return '<article class="card"><button class="card-open" data-detail="'+esc(kind+':'+id)+'"><div class="art '+artClass+'">'+artContent+'</div><div class="card-body"><span class="tag">'+esc(categoryLabel)+'</span><h3>'+esc(x.name||x.term)+'</h3><p>'+esc(x.description||x.meaning||'')+'</p><div class="card-bottom"><span>'+esc(kind==='gear'?'PRODUCT':kind==='pcpart'?'COMPONENT':kind.toUpperCase())+'</span><span>View details ↗</span></div></div></button>'+saveControl+'</article>';
 }
@@ -520,7 +557,7 @@ function productSpecMarkup(specs){
  ).join('<span class="product-spec-divider" aria-hidden="true">·</span>')+'</p>';
 }
 function showDetail(kind,id){let x,body='';
- if(kind==='game'){x=catalog.games.find(z=>z.id===id);if(!x)return;const genre=catalog.genres.find(z=>z.id===x.genre_id);const creators=catalog.creators.filter(z=>z.game_id===x.id);body='<div class="detail"><div class="art">'+(x.image_url?'<img src="'+esc(x.image_url)+'" alt="'+esc(x.name)+' artwork" loading="lazy" decoding="async">':esc(x.name.toUpperCase()))+'</div><div class="detail-copy"><h2>'+esc(x.name)+'</h2><div class="detail-actions">'+saveButtonMarkup('game',x.id)+'</div><p>'+esc(x.description)+'</p><div class="detail-meta">'+(genre?'<span class="chip">'+esc(genre.name)+'</span>':'')+(x.platforms||[]).map(p=>'<span class="chip">'+esc(p)+'</span>').join('')+'</div>'+(x.website_url?'<a class="product-manufacturer-link official-game-website" href="'+esc(x.website_url)+'" target="_blank" rel="noopener noreferrer"><span class="official-site-icon">↗</span><span><small>OFFICIAL WEBSITE</small><b>Visit '+esc(x.name)+' website</b></span><span class="official-site-arrow">↗</span></a>':'')+'<h3>Creators for '+esc(x.name)+'</h3><p class="muted">Creators and YouTubers associated with this game.</p><div class="creator-list">'+(creators.length?creators.map(c=>'<a class="creator-link" href="'+esc(c.channel_url)+'" target="_blank" rel="noopener noreferrer">'+esc(c.name)+' ↗</a>').join(''):'<p class="muted">Creator links are still being added for this game.</p>')+'</div></div></div>'}
+ if(kind==='game'){x=catalog.games.find(z=>z.id===id);if(!x)return;const genre=catalog.genres.find(z=>z.id===x.genre_id);const creators=catalog.creators.filter(z=>z.game_id===x.id);body='<div class="detail"><div class="art game-art"><img src="'+esc(x.image_url||generatedArtworkDataUri(x.name,genre?.name||'GAME'))+'" alt="'+esc(x.name)+' cover artwork" loading="lazy" decoding="async"></div><div class="detail-copy"><h2>'+esc(x.name)+'</h2><div class="detail-actions">'+saveButtonMarkup('game',x.id)+'</div><p>'+esc(x.description)+'</p><div class="detail-meta">'+(genre?'<span class="chip">'+esc(genre.name)+'</span>':'')+(x.platforms||[]).map(p=>'<span class="chip">'+esc(p)+'</span>').join('')+'</div>'+(x.website_url?'<a class="product-manufacturer-link official-game-website" href="'+esc(x.website_url)+'" target="_blank" rel="noopener noreferrer"><span class="official-site-icon">↗</span><span><small>OFFICIAL WEBSITE</small><b>Visit '+esc(x.name)+' website</b></span><span class="official-site-arrow">↗</span></a>':'')+'<h3>Creators for '+esc(x.name)+'</h3><p class="muted">Creators and YouTubers associated with this game.</p><div class="creator-list">'+(creators.length?creators.map(c=>'<a class="creator-link" href="'+esc(c.channel_url)+'" target="_blank" rel="noopener noreferrer"><img class="game-creator-avatar" src="'+generatedCreatorAvatarDataUri(c.name,x.slug||x.name)+'" alt="" loading="lazy" decoding="async"><span>'+esc(c.name)+' ↗</span></a>').join('')):'<p class="muted">Creator links are still being added for this game.</p>')+'</div></div></div>'}
  else if(kind==='platform'){const p={'steam':['Steam','A PC gaming storefront and community with a large game library, friends features and user reviews.','https://store.steampowered.com/'],'geforce-now':['GeForce NOW','Stream supported PC games from the cloud on compatible devices and supported networks.','https://www.nvidia.com/en-us/geforce-now/'],'xbox':['Xbox','Explore Xbox games, services, console features and the wider Xbox gaming ecosystem.','https://www.xbox.com/'],'playstation':['PlayStation','Explore PlayStation games, consoles, services and community features.','https://www.playstation.com/']}[id];if(!p)return;x={name:p[0],description:p[1]};body='<div class="detail"><div class="detail-copy"><h2>'+esc(p[0])+'</h2><p>'+esc(p[1])+'</p><a href="'+p[2]+'" target="_blank" rel="noopener">Official website ↗</a></div></div>'}else if(kind==='gear'||kind==='pcpart'){
  const key=kind==='gear'?'gear':'pcParts';
  x=catalog[key].find(z=>z.id===id);if(!x)return;
@@ -579,7 +616,23 @@ async function checkAdmin(){
  return isOwner
 }
 async function refreshNotificationCount(){const {count,error}=await db.from('admin_notifications').select('id',{count:'exact',head:true}).eq('is_read',false);const total=!error&&count?count:0;const adminBadge=$('admin-notification-badge');if(adminBadge){adminBadge.textContent=total>9?'9+':String(total);adminBadge.hidden=total===0;adminBadge.setAttribute('aria-label',total+' unread notifications')}}
-function view(v){$('sidebar').classList.remove('open');document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='home')renderHome();else if(v==='games')drawGames();else if(v==='gear')drawGear();else if(v==='pcparts')drawPc();else if(v==='abbreviations')drawAbbreviations();else if(v==='brands')drawBrands();else if(v==='suggest')renderSuggestion();else if(v==='admin')checkAdmin().then(ok=>ok?renderAdmin():shell('Access denied','This page is only available to the verified Pixelpedia owner.',''));else if(v==='platforms')shell('Platforms & tools','Explore gaming storefronts, ecosystems and cloud gaming services.','<div class="cards">'+[{name:'Steam',description:'A PC gaming storefront and community.'},{name:'GeForce NOW',description:'Stream supported PC games from the cloud.'},{name:'Xbox',description:'Explore the Xbox gaming ecosystem.'},{name:'PlayStation',description:'Explore PlayStation games and services.'}].map(x=>itemCard(x,'platform')).join('')+'</div>');else if(v==='saved')drawSaved();else if(v==='news')drawNews();else if(v==='irl-creators')drawRealCreators()}
+const platformTools=[
+ {name:'Steam',type:'Game storefront',description:'Browse PC games, manage your library, discover community reviews and connect with friends.',url:'https://store.steampowered.com/'},
+ {name:'GeForce NOW',type:'Cloud gaming',description:'Stream supported PC games to compatible devices without installing every game locally.',url:'https://www.nvidia.com/en-us/geforce-now/'},
+ {name:'Xbox',type:'Gaming ecosystem',description:'Explore Xbox games, services, PC gaming features and console accessories.',url:'https://www.xbox.com/'},
+ {name:'PlayStation',type:'Gaming ecosystem',description:'Explore PlayStation games, consoles, accessories and services.',url:'https://www.playstation.com/'},
+ {name:'PCPartPicker',type:'PC building & compatibility',description:'Create PC parts lists, check component compatibility and compare retailer availability and prices by region.',url:'https://pcpartpicker.com/',image:'https://images.seeklogo.com/logo-png/53/1/pcpartpicker-logo-png_seeklogo-534875.png'},
+ {name:'Logical Increments',type:'PC build guides',description:'Compare suggested PC component tiers by budget and learn what each part does before planning a build.',url:'https://www.logicalincrements.com/',image:'https://images.logicalincrements.com/gallery/900/506/OGMetaImage001.jpeg'}
+];
+function drawPlatforms(){
+ const body='<div class="platform-grid">'+platformTools.map(tool=>{
+  const art=tool.image||generatedArtworkDataUri(tool.name,tool.type);
+  const initials=esc(tool.name.split(' ').slice(0,2).map(part=>part[0]).join('').toUpperCase());
+  return '<a class="platform-card" href="'+esc(tool.url)+'" target="_blank" rel="noopener noreferrer"><div class="platform-card-art"><span>'+initials+'</span><img src="'+esc(art)+'" alt="" loading="lazy" decoding="async" onerror="this.remove()"></div><div class="platform-card-copy"><span class="tag">'+esc(tool.type)+'</span><h3>'+esc(tool.name)+'</h3><p>'+esc(tool.description)+'</p><span class="platform-card-link">Visit website ↗</span></div></a>';
+ }).join('')+'</div>';
+ shell('Platforms & tools','Useful gaming services, storefronts and PC-building resources. External services open in a new tab.',body);
+}
+function view(v){$('sidebar').classList.remove('open');document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='home')renderHome();else if(v==='games')drawGames();else if(v==='gear')drawGear();else if(v==='pcparts')drawPc();else if(v==='abbreviations')drawAbbreviations();else if(v==='brands')drawBrands();else if(v==='suggest')renderSuggestion();else if(v==='admin')checkAdmin().then(ok=>ok?renderAdmin():shell('Access denied','This page is only available to the verified Pixelpedia owner.',''));else if(v==='platforms')drawPlatforms();else if(v==='saved')drawSaved();else if(v==='news')drawNews();else if(v==='irl-creators')drawRealCreators()}
 
 function formatPixelpediaDate(value){
  if(!value)return 'Date not listed';
@@ -592,7 +645,7 @@ function drawNews(){
   return byDate||Number(a.sort_order||0)-Number(b.sort_order||0);
  });
  const body=rows.length
-  ?'<div class="news-feed">'+rows.map(item=>'<article class="news-card"><div class="news-card-meta"><span class="news-category">'+esc(item.category||'Technology')+'</span><time datetime="'+esc(item.published_date||'')+'">'+esc(formatPixelpediaDate(item.published_date))+'</time></div><h3>'+esc(item.title)+'</h3><p>'+esc(item.summary)+'</p><div class="news-card-footer"><span>Source: '+esc(item.source_name||'Pixelpedia')+'</span>'+(item.source_url?'<a href="'+esc(item.source_url)+'" target="_blank" rel="noopener noreferrer">Read original ↗</a>':'')+'</div></article>').join('')+'</div>'
+  ?'<div class="news-feed">'+rows.map(item=>'<article class="news-card"><div class="news-card-art"><img src="'+generatedArtworkDataUri(item.title,item.category||'NEWS')+'" alt="" loading="lazy" decoding="async"></div><div class="news-card-meta"><span class="news-category">'+esc(item.category||'Technology')+'</span><time datetime="'+esc(item.published_date||'')+'">'+esc(formatPixelpediaDate(item.published_date))+'</time></div><h3>'+esc(item.title)+'</h3><p>'+esc(item.summary)+'</p><div class="news-card-footer"><span>Source: '+esc(item.source_name||'Pixelpedia')+'</span>'+(item.source_url?'<a href="'+esc(item.source_url)+'" target="_blank" rel="noopener noreferrer">Read original ↗</a>':'')+'</div></article>').join('')+'</div>'
   :'<div class="news-empty"><div class="news-empty-symbol">▤</div><h3>No news right now</h3><p>There are no published updates at the moment. Check back later — new gaming and technology stories will appear here.</p></div>';
  shell('News','Gaming, technology-industry and Pixelpedia updates. We add stories with a clear source and publication date.',body);
 }
@@ -606,7 +659,7 @@ function drawRealCreators(){
    const items=rows.filter(item=>(item.category||'Other')===category).sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)||a.name.localeCompare(b.name));
    return '<section class="section-block irl-creator-section"><div class="heading"><div><div class="eyebrow">CREATOR CATEGORY</div><h2>'+esc(category)+'</h2></div><span class="muted">'+items.length+' creators</span></div><div class="creator-directory-grid">'+items.map(item=>{
     const initials=item.name.trim().split(/\s+/).slice(0,2).map(part=>part[0]||'').join('').toUpperCase();
-    return '<a class="creator-directory-card" href="'+esc(item.channel_url)+'" target="_blank" rel="noopener noreferrer"><div class="creator-directory-avatar"><span>'+esc(initials)+'</span>'+(item.image_url?'<img src="'+esc(item.image_url)+'" alt="" loading="lazy" decoding="async" onerror="this.remove()">':'')+'</div><div class="creator-directory-copy"><b>'+esc(item.name)+'</b><small>'+esc(item.category)+'</small><p>'+esc(item.description)+'</p><span class="creator-directory-link">Visit channel ↗</span></div></a>';
+    return '<a class="creator-directory-card" href="'+esc(item.channel_url)+'" target="_blank" rel="noopener noreferrer"><div class="creator-directory-avatar"><img src="'+esc(item.image_url||generatedCreatorAvatarDataUri(item.name,item.category))+'" alt="" loading="lazy" decoding="async"></div><div class="creator-directory-copy"><b>'+esc(item.name)+'</b><small>'+esc(item.category)+'</small><p>'+esc(item.description)+'</p><span class="creator-directory-link">Visit channel ↗</span></div></a>';
    }).join('')+'</div></section>';
   }).join('');
  });
