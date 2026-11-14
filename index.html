@@ -461,6 +461,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .brand-detail-title{display:flex;align-items:center;gap:14px;margin:5px 0 12px}
 .brand-detail-title h2{margin:0}
 .news-source-mark{position:absolute;top:50%;left:50%;width:46px;height:46px;max-width:46px;max-height:46px;object-fit:contain;transform:translate(-50%,-50%);padding:6px;border-radius:12px;background:#fff}
+
+/* Failed external logo loads fall back to a centred, balanced monogram. */
+.platform-card-art.is-placeholder .platform-art-mark{
+  position:static;right:auto;bottom:auto;display:block;
+  color:var(--muted);font:800 21px/1.1 'Space Grotesk',sans-serif;
+  letter-spacing:1px;opacity:.9;text-align:center;
+}
 </style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixelpedia","url":"https://pixelpedia.capygod.workers.dev/","description":"A gaming discovery directory for games, gaming creators, peripherals, PC components, brands and gaming terminology."}</script></head>
 <body>
 <aside class="sidebar" id="sidebar"><div class="brand">Pixel<span>pedia</span></div><div class="brand-by">by <a href="https://www.youtube.com/@CapyGodYT" target="_blank" rel="noopener">CapyGodYT ↗</a></div><div class="side-label">DISCOVER</div><nav class="nav"><button class="active" data-view="home">⌂ &nbsp; Overview</button><button data-view="games">▣ &nbsp; Games</button><button data-view="gear">⌁ &nbsp; Gaming gear</button><button data-view="pcparts">▦ &nbsp; PC parts</button><button data-view="abbreviations">Aa &nbsp; Abbreviations</button><button data-view="brands">◇ &nbsp; Brands</button><button data-view="platforms">◈ &nbsp; Platforms & tools</button><button data-view="suggest" id="suggest-nav">✉ &nbsp; Suggest content</button><button data-view="saved">♡ &nbsp; Saved items</button><button data-view="news">▤ &nbsp; News</button><button data-view="irl-creators">◎ &nbsp; IRL creators</button><button data-view="admin" id="admin-nav" style="display:none">⚙ &nbsp; Admin dashboard</button></nav><div class="aside-note">✦ &nbsp; YOUR GAMING HUB<br><b>Discover more. Play your way.</b><br>Games, gear and tools in one place.</div></aside>
